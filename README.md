@@ -1,6 +1,6 @@
 # first passage percolation
 
-This package provides simulation tools for first passage percolation on the square lattice. See the [`example.ipynb`](github.com/arnaud-ma.com/example.ipynb) file for the usage of the package.
+This package provides simulation tools for first passage percolation on the square lattice. See the [`example.ipynb`](example.ipynb) file for the usage of the package.
 
 ## Simple example
 
