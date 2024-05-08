@@ -5,7 +5,7 @@ This package provides simulation tools for first passage percolation on the squa
 ## Simple example
 
 ```python
-import first_passage_percolation as fpp
+import first_passage_percolation_sim as fpp
 from scipy.stats import geom
 
 (fpp.FirstPassagePercolation(size=201, dist=stats.geom(0.5))
