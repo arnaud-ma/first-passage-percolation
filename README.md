@@ -8,7 +8,7 @@ This package provides simulation tools for first passage percolation on the squa
 import first_passage_percolation_sim as fpp
 from scipy.stats import geom
 
-(fpp.FirstPassagePercolation(size=201, dist=stats.geom(0.5))
+(fpp.FirstPassagePercolation(size=201, dist=geom(0.5))
     .compute_lengths()
     .plot_heatmap(cmap="inferno")
 )
