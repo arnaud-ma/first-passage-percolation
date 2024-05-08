@@ -4,12 +4,19 @@ build-backend = "hatchling.build"
 
 [project]
 name = "first-passage-percolation-sim"
-version = "0.1.0"
+version = "0.1.1"
 description = 'Simulations of the first passage percolation on the square lattice'
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
-keywords = []
+keywords = [
+  "first-passage-percolation",
+  "percolation",
+  "simulation",
+  "square-lattice",
+  "probability",
+  "graph-theory",
+]
 authors = [{ name = "arnaud-ma", email = "arnaudma.code@gmail.com" }]
 classifiers = [
   "Development Status :: 4 - Beta",
