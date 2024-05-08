@@ -1,0 +1,124 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "first-passage-percolation-sim"
+version = "0.1.0"
+description = 'Simulations of the first passage percolation on the square lattice'
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+keywords = []
+authors = [{ name = "arnaud-ma", email = "arnaudma.code@gmail.com" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = ["numpy >= 1.26", "rustworkx >= 0.14", "matplotlib >= 3.8"]
+
+[project.urls]
+Documentation = "https://github.com/unknown/first-passage-percolation#readme"
+Issues = "https://github.com/unknown/first-passage-percolation/issues"
+Source = "https://github.com/unknown/first-passage-percolation"
+
+
+[tool.ruff]
+fix = true
+preview = true
+unsafe-fixes = false
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 72
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+preview = true
+extend-select = ["ALL"]
+extend-ignore = [
+  # undocumented docstrings
+  "D100", # public module
+  "D101", # public class
+  "D102", # public method
+  "D103", # public function
+  "D104", # public package
+  "D105", # magic method
+  "D106", # public nested class
+  "D107", # public init method
+  "D205", # blank line after summary
+  # ^todo tags
+  "TD002",  # author on TODO tag
+  "TD003",  # link on TODO tag
+  "FIX002", # check for todo tags
+
+  "SLF001", # private member
+  "CPY",    # Copyrigth
+  "ANN",    # Annotations
+  "ARG001", # unused func arguments
+  "ARG002", # unused method arguments
+  "RET506", # Unnecessary `elif` after `raise` statement"
+  "PGH003", # code-error on type: ignore
+
+  # conflicts with formatter https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  "W191",   # tab indent
+  "W293",   # blank line at end of file
+  "E111",   # indentation is not a multiple of four
+  "E114",   # indentation is not a multiple of four (comment)
+  "E117",   # over-indented
+  "E301",   # expected 1 blank line, found 0
+  "E302",   # expected 2 blank lines, found 1
+  "E305",   # expected 2 blank lines after class or function definition, found 1
+  "E701",   # multiple statements on one line (colon)
+  "E702",   # multiple statements on one line (semicolon)
+  "E703",   # statement ends with a semicolon
+  "D206",   # Docstring is indented
+  "D300",   # Use """triple double quotes"""
+  "COM812", # missing trailing comma
+  "COM819", # trailing comma in a tuple
+  "ISC001", # missing space after comma
+  "ISC002", # missing space before comma
+  "I001",   # isort
+
+  # debug
+  "T201", # print statements
+
+  # Unwanted
+  "FURB140", # itertools.starmap instead of comprehension
+  "PLR0904", # too many public methods
+  "ERA001",  # commented code
+
+  # Conflicts with the ide
+  "F841", # local variable is assigned to but never used
+
+  "EXE", # executable (shebang, etc.)
+]
+
+[tool.ruff.lint.pylint]
+max-args = 10
+
+
+[tool.ruff.lint.extend-per-file-ignores]
+"*.pyi" = ["E999", "F401", "E501"]                # syntax error, unused import, line too long
+"__init__.py" = ["F401"]
+"*.ipynb" = ["F401"]                              # unused import
+"tests/*" = ["S", "PLR2004", "PLR6301", "TID252"]
+
+
+[tool.pyright]
+# deactivate pyright features that are already covered by ruff
+# actually only enables type checking
+# https://microsoft.github.io/pyright/#/configuration?id=diagnostic-rule-defaults for more info
+typeCheckingMode = "standard"
+reportGeneralTypeIssues = true
+reportMissingTypeStubs = false
+reportUndefinedVariable = false
+reportUnusedVariable = false
+reportUnusedClass = false
+reportUnusedFunction = false
+reportUnaccessedMember = false
