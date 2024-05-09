@@ -23,7 +23,8 @@ def check_size_grid(size: int):
 
 @dataclass
 class CenteredGrid:
-    """Represents a centered grid. That is, the center is at (0, 0) and
+    """
+    Represents a centered grid. That is, the center is at (0, 0) and
     the indices are from -size_side // 2 to size_side // 2 - 1.
 
     Attributes
@@ -131,7 +132,8 @@ def _get_lengths(graph: rw.PyGraph, source_node: int, dist: Dist, rng, nb_edges)
 
 
 class FirstPassagePercolation:
-    """Represents a First Passage Percolation simulation.
+    """
+    Represents a First Passage Percolation simulation.
         Each attribute can be modified after the object creation, except
         for the graph. However, some changes may require recomputing the lengths by
         calling the compute_lengths() method.
@@ -298,7 +300,8 @@ class FirstPassagePercolation:
         return self._grid_lengths
 
     def compute_lengths(self):
-        """Apply the Dijkstra algorithm to compute the lengths of the shortest
+        """
+        Apply the Dijkstra algorithm to compute the lengths of the shortest
         paths from the source node to all other nodes.
 
         Returns
@@ -319,7 +322,8 @@ class FirstPassagePercolation:
         return self
 
     def node_to_ij(self, node):
-        """Convert a node index to a (i, j) tuple.
+        """
+        Convert a node index to a (i, j) tuple.
 
         Args:
         ----
@@ -345,7 +349,8 @@ class FirstPassagePercolation:
         return grid.reshape(self.size_side, self.size_side)
 
     def plot_heatmap(self, ax=None, **kwargs):
-        """Plot a heatmap of the lengths.
+        """
+        Plot a heatmap of the lengths.
 
         Args:
         ----
@@ -358,7 +363,8 @@ class FirstPassagePercolation:
         return ax.imshow(self.grid_lengths.array, **kwargs)
 
     def plot_progression(self, t, ax=None, colors=("red", "white"), **kwargs):
-        """Draw the set T(t) := {i : L(i) <= t} in the first color
+        """
+        Draw the set T(t) := {i : L(i) <= t} in the first color
         and its complement in the second color.
 
         Args:
@@ -380,7 +386,8 @@ class FirstPassagePercolation:
 def lengths_varying_param(
     dist_func, range_x, size_side, rng, *, positive_indices=False
 ):
-    """Generate the grid lengths with varying parameters of the distribution that
+    """
+    Generate the grid lengths with varying parameters of the distribution that
     describes the random edge weights.
 
     Args:
@@ -417,7 +424,8 @@ def lengths_varying_param(
 def plot_lengths_varying_param(
     dist_func, range_x, size_side, rng, *, nb_cols=1, name_x="Parameter", **kwargs
 ):
-    """Plot the grid lengths with varying parameters.
+    """
+    Plot the grid lengths with varying parameters.
 
     Args:
     ----
