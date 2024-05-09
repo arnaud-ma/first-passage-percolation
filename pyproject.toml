@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "first-passage-percolation-sim"
-version = "0.1.2"
+version = "0.1.3"
 description = 'Simulations of the first passage percolation on the square lattice'
 readme = "README.md"
 requires-python = ">=3.12"
