@@ -27,9 +27,9 @@ classifiers = [
 dependencies = ["numpy >= 1.26", "rustworkx >= 0.14", "matplotlib >= 3.8"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/first-passage-percolation#readme"
-Issues = "https://github.com/unknown/first-passage-percolation/issues"
-Source = "https://github.com/unknown/first-passage-percolation"
+Documentation = "https://github.com/arnaud-ma/first-passage-percolation#readme"
+Issues = "https://github.com/arnaud-ma/first-passage-percolation/issues"
+Source = "https://github.com/arnaud-ma/first-passage-percolation"
 
 
 [tool.ruff]
