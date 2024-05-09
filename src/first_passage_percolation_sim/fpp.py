@@ -62,9 +62,7 @@ class CenteredGrid:
     def __str__(self):
         name = self.__class__.__name__
         indent = " " * len(name)
-        array_str = np.array2string(
-            self.array, separator=", ", prefix=indent, suffix=","
-        )
+        array_str = np.array2string(self.array, separator=", ", prefix=indent, suffix=",")
         return f"{name}(\n{indent}{array_str}\n)"
 
     @property
@@ -217,9 +215,7 @@ class FirstPassagePercolation:
         if not isinstance(value, FirstPassagePercolation):
             return False
         return (
-            self.size_side == value.size_side
-            and self.dist == value.dist
-            and self.rng == value.rng
+            self.size_side == value.size_side and self.dist == value.dist and self.rng == value.rng
         )
 
     def __hash__(self):
@@ -237,10 +233,7 @@ class FirstPassagePercolation:
     @property
     def lengths(self):
         if self._lengths is None:
-            msg = (
-                "Lengths have not been set yet. "
-                "Call the compute_lengths() method first."
-            )
+            msg = "Lengths have not been set yet. " "Call the compute_lengths() method first."
             raise ValueError(msg)
         return self._lengths
 
@@ -292,12 +285,14 @@ class FirstPassagePercolation:
     @property
     def grid_lengths(self):
         if self._grid_lengths is None:
-            msg = (
-                "Grid lengths have not been set yet. "
-                "Call the compute_lengths() method first."
-            )
+            msg = "Grid lengths have not been set yet. Call the compute_lengths() method first."
             raise ValueError(msg)
         return self._grid_lengths
+
+    @property
+    def grid_extent(self):
+        """Return the extents of the grid for plotting."""
+        return (self.grid_lengths.start_index, self.grid_lengths.end_index) * 2
 
     def compute_lengths(self):
         """
@@ -313,9 +308,7 @@ class FirstPassagePercolation:
         rng = copy.deepcopy(self.rng)
 
         # _lengths is a dict node_id(int): length
-        lengths = _get_lengths(
-            self.graph, self.center_node, self.dist, rng, self.nb_edges
-        )
+        lengths = _get_lengths(self.graph, self.center_node, self.dist, rng, self.nb_edges)
         # 0 is omitted in the dict, so we add it manually
         lengths[self.center_node] = 0
         self._set_lengths(lengths)
@@ -360,9 +353,10 @@ class FirstPassagePercolation:
 
         """
         ax = ax or plt.gca()
-        return ax.imshow(self.grid_lengths.array, **kwargs)
+        extent = kwargs.pop("extent", None) or self.grid_extent
+        return ax.imshow(self.grid_lengths.array, extent=extent, **kwargs)
 
-    def plot_progression(self, t, ax=None, colors=("red", "white"), **kwargs):
+    def plot_progression(self, t, axes=None, colors=("white", "red"), customization=None, **kwargs):
         """
         Draw the set T(t) := {i : L(i) <= t} in the first color
         and its complement in the second color.
@@ -370,22 +364,27 @@ class FirstPassagePercolation:
         Args:
         ----
             t (float): The threshold.
-            ax (Axes | None): The matplotlib axes.
+            axes (Axes | Array[Axes] | None): The matplotlib axes.
             colors (tuple[str, str]): The colors of the two sets.
+            customization (callable): A function that customizes the axes at each step.
+                It must take the axes and the threshold as arguments.
             **kwargs: Additional arguments passed to plt.plot.
 
         """
-        ax = ax or plt.gca()
+        axes = axes if axes is not None else plt.gca()
+        grid = self.grid_lengths
+        extent = kwargs.pop("extent", None) or self.grid_extent
+        cmap = mpl_colors.ListedColormap(colors)
 
-        grid = self.grid_lengths.array
-        cmap = mpl_colors.ListedColormap(tuple(reversed(colors)))
-        ax.imshow(grid <= t, cmap=cmap, **kwargs)
-        return ax
+        t, axes = np.atleast_1d(t, axes)
+        for _t, ax in zip(t.ravel(), axes.ravel(), strict=False):
+            ax.imshow(grid.array <= _t, cmap=cmap, extent=extent, **kwargs)
+            if customization:
+                customization(ax, _t)
+        return axes if len(axes) > 1 else axes[0]
 
 
-def lengths_varying_param(
-    dist_func, range_x, size_side, rng, *, positive_indices=False
-):
+def lengths_varying_param(dist_func, range_x, size_side, rng, *, positive_indices=False):
     """
     Generate the grid lengths with varying parameters of the distribution that
     describes the random edge weights.
@@ -422,7 +421,7 @@ def lengths_varying_param(
 
 
 def plot_lengths_varying_param(
-    dist_func, range_x, size_side, rng, *, nb_cols=1, name_x="Parameter", **kwargs
+    dist_func, range_x, size_side, rng, custom_func=None, *, nb_cols=1, **kwargs
 ):
     """
     Plot the grid lengths with varying parameters.
@@ -436,16 +435,18 @@ def plot_lengths_varying_param(
         rng: The random number generator.
         nb_cols: The number of columns in the plot.
         name_x: The name of the parameter (appear in the title of each subplot)
+        custom_func: A function that customizes the axes at each step.
+            It must take the axes and the parameter as arguments.
         **kwargs: Additional arguments passed to plt.imshow (cmap, interpolation, etc.).
 
     """
     nb_vars = len(range_x)
     nb_rows = nb_vars // nb_cols + (nb_vars % nb_cols != 0)
     fig, axes = plt.subplots(nb_rows, nb_cols, figsize=(5 * nb_cols, 5 * nb_rows))
-    all_mat = lengths_varying_param(
-        dist_func, range_x, size_side, rng, positive_indices=True
-    )
+    all_mat = lengths_varying_param(dist_func, range_x, size_side, rng, positive_indices=True)
+    extent = kwargs.pop("extent", None) or (-size_side // 2, size_side // 2) * 2
     for ax, grid_lengths, x in zip(axes.ravel(), all_mat, range_x, strict=False):
-        ax.imshow(grid_lengths, **kwargs)
-        ax.set_title(f"{name_x} = {x:.2f}")
+        ax.imshow(grid_lengths, extent=extent, **kwargs)
+        if custom_func:
+            custom_func(ax, x)
     return fig, axes

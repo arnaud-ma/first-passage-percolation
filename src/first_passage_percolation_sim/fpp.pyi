@@ -6,7 +6,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.image import AxesImage
 from numpy import floating, random, signedinteger
-from numpy.typing import NBitBase, NDArray
+from numpy.typing import NDArray
 from rustworkx import PyGraph
 
 type FloatArray = NDArray[floating[Any]]
@@ -29,9 +29,7 @@ class Dist(Protocol):
     def rvs(self, size: int, random_state: random.Generator) -> NDArray: ...
 
 class FirstPassagePercolation:
-    def __init__(
-        self, size_side: int, dist: Dist, rng: random.Generator | None = None
-    ) -> None: ...
+    def __init__(self, size_side: int, dist: Dist, rng: random.Generator | None = None) -> None: ...
     def __eq__(self, value: object) -> bool: ...
     def __hash__(self) -> int: ...
     @property
@@ -58,15 +56,20 @@ class FirstPassagePercolation:
     def center_node(self) -> int: ...
     @property
     def grid_lengths(self) -> CenteredGrid: ...
+    @property
+    def grid_extent(self) -> tuple[float, float, float, float]: ...
     def compute_lengths(self) -> Self: ...
     def node_to_ij(
         self, node: int | NDArray
-    ) -> tuple[
-        int | NDArray[signedinteger[Any]], int | NDArray[signedinteger[Any]]
-    ]: ...
+    ) -> tuple[int | NDArray[signedinteger[Any]], int | NDArray[signedinteger[Any]]]: ...
     def plot_heatmap(self, ax: Axes | None = None, **kwargs) -> AxesImage: ...
     def plot_progression(
-        self, t: float, ax: Axes | None = None, colors: tuple[str, str] = ..., **kwargs
+        self,
+        t: float | Iterable[float],
+        ax: Axes | Iterable[Axes] | None = None,
+        colors: tuple[str, str] = ...,
+        customization: Callable[[Axes, Any], None] | None = None,
+        **kwargs,
     ) -> Axes: ...
 
 @overload
@@ -100,7 +103,8 @@ def plot_lengths_varying_param[T](
     range_x: Iterable[T],
     size_side: int,
     rng: random.Generator,
+    custom_func: Callable[[Axes, Any], None] | None = None,
+    *,
     nb_cols=1,
-    name_x: str = ...,
     **kwargs,
 ) -> tuple[Figure, Axes]: ...
